@@ -1,493 +1,857 @@
 <!DOCTYPE HTML>
-<!--
-	Highlights by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
-	<head>
-		<title>Project NYR</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
+<head>
+	<title>Project NYR — Word Arc</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="Word Arc — Block Puzzle Quest. A unique word game combining word discovery and block puzzle gameplay." />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+		/* ─── RESET & BASE ─────────────────────────────────────────── */
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-		<!-- Header -->
-			<section id="header">
-				<header class="major">
-					<h1>Project NYR</h1>
-					<p>We are building <a href="#one">games</a> and <a href="#two">gadgets</a> for thinking beings.</p>
-				</header>
-				<div class="container">
-					<ul class="actions special">
-						<li><a href="https://play.google.com/store/apps/details?id=com.projectnyr.wordarc"><img src="images/icon_wordarc_rounded.png"><br>
-						<img src="images/googleplay.png" "></a></li>
-						
-					</ul>
+		:root {
+			--bg:        #0a0c10;
+			--bg2:       #0f1218;
+			--surface:   rgba(255,255,255,0.04);
+			--border:    rgba(255,255,255,0.08);
+			--accent:    #7eb8f7;
+			--accent2:   #f7c97e;
+			--text:      #c8d4e8;
+			--text-dim:  #5a6a80;
+			--white:     #eef2f8;
+			--glow:      rgba(126,184,247,0.18);
+		}
+
+		html { scroll-behavior: smooth; }
+
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font-family: 'Crimson Pro', Georgia, serif;
+			font-size: 18px;
+			line-height: 1.7;
+			overflow-x: hidden;
+		}
+
+		/* ─── BACKGROUND ────────────────────────────────────────────── */
+		#bg {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+			background-image: url('images/pic01.png');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			transition: filter 0.6s ease, transform 0.6s ease;
+			transform: scale(1);
+		}
+		/* Karanlık overlay — görseli çok ezmiyor ama okunabilirlik sağlıyor */
+		#bg::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background:
+				linear-gradient(160deg, rgba(6,8,14,0.62) 0%, rgba(6,8,14,0.78) 100%),
+				radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10,14,24,0.35) 0%, transparent 70%);
+		}
+		/* Grid dokusu */
+		#bg::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background-image:
+				repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.012) 40px),
+				repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.012) 40px);
+			pointer-events: none;
+		}
+		/* Modal açıkken arka plan blur + scale efekti (Dimension tarzı) */
+		body.modal-open #bg {
+			filter: blur(12px) brightness(0.45);
+			transform: scale(1.05);
+		}
+
+		/* ─── WRAPPER ───────────────────────────────────────────────── */
+		#wrapper {
+			position: relative;
+			z-index: 1;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		/* ─── HEADER / HERO ─────────────────────────────────────────── */
+		#header {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 4rem 2rem;
+		}
+		/* Staggered giriş animasyonu */
+		#header > * {
+			opacity: 0;
+			animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+		}
+		#header .logo-wrap   { animation-delay: 0.1s; }
+		#header h1           { animation-delay: 0.28s; }
+		#header .tagline     { animation-delay: 0.4s; }
+		#header > p          { animation-delay: 0.52s; }
+		#header nav          { animation-delay: 0.66s; }
+		#header .play-btn    { animation-delay: 0.8s; }
+
+		.logo-wrap {
+			position: relative;
+			margin-bottom: 2.5rem;
+		}
+		.logo-wrap img {
+			width: 110px;
+			height: 110px;
+			border-radius: 24px;
+			box-shadow:
+				0 0 0 1px rgba(126,184,247,0.2),
+				0 0 40px rgba(126,184,247,0.25),
+				0 20px 60px rgba(0,0,0,0.6);
+			transition: transform 0.4s ease, box-shadow 0.4s ease;
+		}
+		.logo-wrap img:hover {
+			transform: translateY(-4px) scale(1.03);
+			box-shadow:
+				0 0 0 1px rgba(126,184,247,0.35),
+				0 0 60px rgba(126,184,247,0.35),
+				0 30px 80px rgba(0,0,0,0.7);
+		}
+
+		#header h1 {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 700;
+			font-size: clamp(2.8rem, 7vw, 5rem);
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: #fff;
+			line-height: 1;
+			margin-bottom: 0.4rem;
+			text-shadow: 0 2px 24px rgba(0,0,0,0.7), 0 0 60px rgba(126,184,247,0.15);
+		}
+		#header h1 span {
+			color: var(--accent);
+			text-shadow: 0 0 30px rgba(126,184,247,0.5), 0 2px 16px rgba(0,0,0,0.7);
+		}
+
+		.tagline {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.68rem;
+			letter-spacing: 0.38em;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.5);
+			text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+			margin-bottom: 1.8rem;
+		}
+
+		#header p {
+			max-width: 520px;
+			font-size: 1.12rem;
+			color: rgba(255,255,255,0.75);
+			text-shadow: 0 1px 12px rgba(0,0,0,0.7);
+			margin-bottom: 2.8rem;
+			font-weight: 300;
+		}
+
+		/* ─── NAV ───────────────────────────────────────────────────── */
+		nav {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 0.6rem;
+			margin-bottom: 3rem;
+		}
+		nav a {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 700;
+			font-size: 0.78rem;
+			letter-spacing: 0.22em;
+			text-transform: uppercase;
+			text-decoration: none;
+			color: rgba(255,255,255,0.82);
+			padding: 0.65rem 1.6rem;
+			border: 1px solid rgba(255,255,255,0.35);
+			border-radius: 3px;
+			/* Glassmorphism — her arka planda görünür */
+			background: rgba(0,0,0,0.38);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			box-shadow: 0 2px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+			transition: all 0.28s ease;
+			cursor: pointer;
+		}
+		nav a:hover, nav a.active {
+			color: #fff;
+			border-color: rgba(126,184,247,0.7);
+			background: rgba(126,184,247,0.18);
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			box-shadow: 0 0 24px rgba(126,184,247,0.22), 0 2px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+			transform: translateY(-1px);
+		}
+		nav a:active {
+			transform: translateY(0px);
+		}
+
+		/* ─── GOOGLE PLAY BUTTON ────────────────────────────────────── */
+		.play-btn {
+			display: inline-block;
+			opacity: 0.4;
+			filter: grayscale(0.3);
+			transition: opacity 0.3s, filter 0.3s, transform 0.3s;
+			cursor: default;
+			position: relative;
+		}
+		.play-btn::after {
+			content: 'Coming Soon';
+			position: absolute;
+			bottom: -1.6rem;
+			left: 50%;
+			transform: translateX(-50%);
+			font-family: 'Space Mono', monospace;
+			font-size: 0.6rem;
+			letter-spacing: 0.2em;
+			color: var(--text-dim);
+			white-space: nowrap;
+		}
+		.play-btn img {
+			height: 50px;
+		}
+
+		/* ─── MODAL SYSTEM ──────────────────────────────────────────── */
+		#main {
+			position: relative;
+			z-index: 1;
+		}
+
+		.modal-overlay {
+			display: none;
+			position: fixed;
+			inset: 0;
+			z-index: 100;
+			background: rgba(5,7,12,0.92);
+			backdrop-filter: blur(8px);
+			-webkit-backdrop-filter: blur(8px);
+			animation: fadeIn 0.3s ease;
+		}
+		.modal-overlay.active { display: flex; align-items: center; justify-content: center; padding: 2rem; }
+
+		.modal {
+			position: relative;
+			background: var(--bg2);
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			max-width: 760px;
+			width: 100%;
+			max-height: 88vh;
+			overflow-y: auto;
+			box-shadow: 0 0 0 1px rgba(126,184,247,0.1), 0 40px 120px rgba(0,0,0,0.8);
+			animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1) both;
+			scrollbar-width: thin;
+			scrollbar-color: var(--border) transparent;
+		}
+
+		.modal-header {
+			padding: 2.5rem 2.5rem 1.5rem;
+			border-bottom: 1px solid var(--border);
+			position: sticky;
+			top: 0;
+			background: var(--bg2);
+			z-index: 2;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.modal-header h2 {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 700;
+			font-size: 1.6rem;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: var(--white);
+		}
+		.modal-close {
+			background: none;
+			border: 1px solid var(--border);
+			color: var(--text-dim);
+			width: 36px;
+			height: 36px;
+			border-radius: 3px;
+			cursor: pointer;
+			font-size: 1.2rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s;
+			flex-shrink: 0;
+		}
+		.modal-close:hover {
+			border-color: rgba(126,184,247,0.4);
+			color: var(--accent);
+		}
+		.modal-body { padding: 2rem 2.5rem 2.5rem; }
+
+		/* ─── WORD ARC MODAL ────────────────────────────────────────── */
+		.feature-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 1rem;
+			margin-bottom: 2rem;
+		}
+		.feature-item {
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			padding: 1.2rem;
+		}
+		.feature-item h4 {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 600;
+			font-size: 0.75rem;
+			letter-spacing: 0.2em;
+			text-transform: uppercase;
+			color: var(--accent);
+			margin-bottom: 0.4rem;
+		}
+		.feature-item p {
+			font-size: 0.92rem;
+			color: var(--text);
+			line-height: 1.5;
+		}
+
+		/* ─── SCREENSHOT GALLERY ────────────────────────────────────── */
+		.gallery-label {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.65rem;
+			letter-spacing: 0.3em;
+			text-transform: uppercase;
+			color: var(--text-dim);
+			margin-bottom: 1rem;
+		}
+		.gallery-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 0.6rem;
+			margin-bottom: 2rem;
+		}
+		.gallery-thumb {
+			aspect-ratio: 9/16;
+			overflow: hidden;
+			border-radius: 4px;
+			border: 1px solid var(--border);
+			cursor: pointer;
+			position: relative;
+			background: #111;
+		}
+		.gallery-thumb img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.4s ease, filter 0.4s ease;
+			filter: brightness(0.85);
+		}
+		.gallery-thumb:hover img {
+			transform: scale(1.05);
+			filter: brightness(1);
+		}
+		.gallery-thumb::after {
+			content: '⊕';
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.8rem;
+			color: var(--accent);
+			opacity: 0;
+			transition: opacity 0.3s;
+			background: rgba(126,184,247,0.05);
+		}
+		.gallery-thumb:hover::after { opacity: 1; }
+
+		.modal-play-btn {
+			display: flex;
+			justify-content: center;
+			padding-top: 0.5rem;
+		}
+
+		/* ─── LIGHTBOX ──────────────────────────────────────────────── */
+		#lightbox {
+			display: none;
+			position: fixed;
+			inset: 0;
+			z-index: 200;
+			background: rgba(0,0,0,0.96);
+			align-items: center;
+			justify-content: center;
+			animation: fadeIn 0.2s ease;
+		}
+		#lightbox.active { display: flex; }
+		#lightbox img {
+			max-height: 88vh;
+			max-width: 88vw;
+			border-radius: 4px;
+			box-shadow: 0 0 80px rgba(0,0,0,0.9);
+			animation: scaleIn 0.3s cubic-bezier(0.16,1,0.3,1);
+		}
+		.lb-close {
+			position: fixed;
+			top: 1.5rem;
+			right: 1.5rem;
+			background: rgba(255,255,255,0.08);
+			border: 1px solid rgba(255,255,255,0.15);
+			color: #fff;
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1.3rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.2s;
+		}
+		.lb-close:hover { background: rgba(255,255,255,0.15); }
+		.lb-nav {
+			position: fixed;
+			top: 50%;
+			transform: translateY(-50%);
+			background: rgba(255,255,255,0.06);
+			border: 1px solid rgba(255,255,255,0.12);
+			color: #fff;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1.4rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.2s;
+		}
+		.lb-nav:hover { background: rgba(255,255,255,0.14); }
+		#lb-prev { left: 1.5rem; }
+		#lb-next { right: 1.5rem; }
+		.lb-counter {
+			position: fixed;
+			bottom: 1.5rem;
+			left: 50%;
+			transform: translateX(-50%);
+			font-family: 'Space Mono', monospace;
+			font-size: 0.65rem;
+			letter-spacing: 0.2em;
+			color: rgba(255,255,255,0.3);
+		}
+
+		/* ─── ABOUT MODAL ───────────────────────────────────────────── */
+		.about-text p {
+			color: var(--text);
+			margin-bottom: 1.2rem;
+			font-size: 1.05rem;
+		}
+		.studio-tag {
+			display: inline-block;
+			font-family: 'Space Mono', monospace;
+			font-size: 0.62rem;
+			letter-spacing: 0.25em;
+			text-transform: uppercase;
+			color: var(--accent2);
+			border: 1px solid rgba(247,201,126,0.25);
+			padding: 0.3rem 0.8rem;
+			border-radius: 2px;
+			margin-bottom: 1.5rem;
+		}
+
+		/* ─── CONTACT MODAL ─────────────────────────────────────────── */
+		.contact-links {
+			display: flex;
+			flex-direction: column;
+			gap: 0.8rem;
+		}
+		.contact-link {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			padding: 1rem 1.2rem;
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			text-decoration: none;
+			color: var(--text);
+			transition: all 0.25s;
+		}
+		.contact-link:hover {
+			border-color: rgba(126,184,247,0.35);
+			color: var(--accent);
+			background: rgba(126,184,247,0.05);
+		}
+		.contact-link .icon {
+			font-size: 1.2rem;
+			width: 28px;
+			text-align: center;
+			flex-shrink: 0;
+		}
+		.contact-link .label {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 600;
+			font-size: 0.8rem;
+			letter-spacing: 0.15em;
+			text-transform: uppercase;
+			color: var(--text-dim);
+			width: 80px;
+		}
+		.contact-link .value {
+			font-size: 0.95rem;
+		}
+
+		/* ─── PRIVACY MODAL ─────────────────────────────────────────── */
+		.privacy-section { margin-bottom: 1.8rem; }
+		.privacy-section h3 {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 600;
+			font-size: 0.8rem;
+			letter-spacing: 0.2em;
+			text-transform: uppercase;
+			color: var(--accent);
+			margin-bottom: 0.6rem;
+		}
+		.privacy-section p, .privacy-section li {
+			font-size: 0.92rem;
+			color: var(--text);
+			line-height: 1.65;
+		}
+		.privacy-section ul {
+			padding-left: 1.2rem;
+		}
+		.privacy-section li { margin-bottom: 0.3rem; }
+		.privacy-date {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.62rem;
+			letter-spacing: 0.2em;
+			color: var(--text-dim);
+			margin-bottom: 1.5rem;
+		}
+
+		/* ─── FOOTER ────────────────────────────────────────────────── */
+		#footer {
+			padding: 3rem 2rem;
+			text-align: center;
+			border-top: 1px solid rgba(255,255,255,0.1);
+			width: 100%;
+		}
+		#footer p {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.62rem;
+			letter-spacing: 0.2em;
+			color: rgba(255,255,255,0.35);
+			text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+		}
+		#footer a {
+			color: rgba(255,255,255,0.35);
+			text-decoration: none;
+			transition: color 0.2s;
+		}
+		#footer a:hover { color: rgba(126,184,247,0.9); }
+
+		/* ─── ANIMATIONS ────────────────────────────────────────────── */
+		@keyframes fadeIn   { from { opacity: 0 } to { opacity: 1 } }
+		@keyframes fadeUp   { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: translateY(0) } }
+		@keyframes slideUp  { from { opacity: 0; transform: translateY(32px) } to { opacity: 1; transform: translateY(0) } }
+		@keyframes scaleIn  { from { opacity: 0; transform: scale(0.94) } to { opacity: 1; transform: scale(1) } }
+
+		/* ─── RESPONSIVE ────────────────────────────────────────────── */
+		@media (max-width: 600px) {
+			.gallery-grid { grid-template-columns: repeat(2, 1fr); }
+			.feature-grid { grid-template-columns: 1fr; }
+			.modal-body { padding: 1.5rem; }
+			.modal-header { padding: 1.5rem 1.5rem 1rem; }
+			#lb-prev { left: 0.5rem; }
+			#lb-next { right: 0.5rem; }
+			nav a { font-size: 0.72rem; padding: 0.5rem 1rem; }
+		}
+	</style>
+</head>
+<body>
+
+<div id="bg"></div>
+
+<div id="wrapper">
+
+	<!-- HERO -->
+	<header id="header">
+		<div class="logo-wrap">
+			<img src="images/icon_wordarc_rounded.png" alt="Word Arc" />
+		</div>
+
+		<h1>Word <span>Arc</span></h1>
+		<p class="tagline">Block Puzzle Quest · 20+ Languages</p>
+
+		<p>Where word discovery meets block puzzle strategy. Swipe to find words, clear rows and columns, and uncover an expanding story — one block at a time.</p>
+
+		<nav>
+			<a onclick="openModal('modal-game')">The Game</a>
+			<a onclick="openModal('modal-about')">About</a>
+			<a onclick="openModal('modal-contact')">Contact</a>
+			<a onclick="openModal('modal-privacy')">Privacy</a>
+		</nav>
+
+		<div class="play-btn">
+			<img src="images/googleplay.png" alt="Get it on Google Play" />
+		</div>
+	</header>
+
+	<main id="main"></main>
+
+	<footer id="footer">
+		<p>© 2026 Project NYR &nbsp;·&nbsp; <a onclick="openModal('modal-privacy')" style="cursor:pointer">Privacy Policy</a> &nbsp;·&nbsp; Design by <a href="https://html5up.net" target="_blank">HTML5 UP</a> (adapted)</p>
+	</footer>
+
+</div>
+
+<!-- ─── MODAL: THE GAME ──────────────────────────────────── -->
+<div id="modal-game" class="modal-overlay" onclick="handleOverlayClick(event, 'modal-game')">
+	<div class="modal">
+		<div class="modal-header">
+			<h2>Word Arc</h2>
+			<button class="modal-close" onclick="closeModal('modal-game')">✕</button>
+		</div>
+		<div class="modal-body">
+
+			<div class="feature-grid">
+				<div class="feature-item">
+					<h4>Easy to Play</h4>
+					<p>Swipe across letter blocks on the board to form words. The longer the word, the higher the score.</p>
 				</div>
-			</section>
-
-		<!-- One -->
-			<section id="one" class="main special">
-				<div class="container">
-					<span class="image fit primary"><img src="images/pic01.png" alt="" /></span>
-					<div class="content">
-					<img src="images/scrshot1.png">
-						<header class="major">
-							<h2>Word Arc</h2>
-						</header>
-						
-						<p>Meet your new addictive word game, where imagination is your only limit. <b>Word Arc</b> successfully combines two unique and groundbreaking gameplay styles into one unforgettable experience, doubling the fun of both <b>word</b> and <b>puzzle</b> games.</p>
-						
-						<p>Discover fascinating new words and rediscover yourself along the way. The words you create are limited only by your imagination and vocabulary. With <b>more than 20 languages</b> and <b>millions of possible words</b>, you can easily find the longest combinations with a <b>single swipe</b>.</p>
-						
-						<p>Want even higher scores? Build clever combos with chains of smaller words. Clear rows and columns to free up the board and make room for new block shapes. Think it is too easy? Challenge yourself with <b>Expert Mode</b>.</p>
-						
-						<p>An expanding story campaign, achievements that adapt to your progress, and more than one hundred unique badges and rewards are waiting to be discovered as you continue your journey.</p>
-						
-						<p>Welcome to the world of <b>Word Arc</b>.</p>
-
-						<ul class="icons-grid">
-							<li>
-								<span><img src="images/scrshot2.jpg"></span>
-								<h3>EASY TO PLAY</h3>
-							</li>
-							<li>
-								<span><img src="images/scrshot3.jpg"></span>
-								<h3>HARD TO MASTER</h3>
-							</li>
-							<li>
-								<span><img src="images/scrshot4.jpg"></span>
-								<h3>EXCITING ACHIEVEMENTS</h3>
-							</li>
-							<li>
-								<span><img src="images/scrshot5.jpg"></span>
-								<h3>EXPANDING STORY</h3>
-							</li>
-						</ul>
-						
-						
-						<ul class="actions special">
-							<li><a href="https://play.google.com/store/apps/details?id=com.projectnyr.wordarc"><img src="images/icon_wordarc_rounded.png"><br>
-							<img src="images/googleplay.png" "></a></li>
-						
-						</ul>
-			
-						
-					</div>
-					<a href="#two" class="goto-next scrolly">Next</a>
+				<div class="feature-item">
+					<h4>Hard to Master</h4>
+					<p>Clear rows and columns with clever block placement. Chain combos to reach Expert Mode scores.</p>
 				</div>
-			</section>
-
-		<!-- Two -->
-			<section id="two" class="main special">
-				<div class="container">
-					<span class="image fit primary"><img src="images/pic02.jpg" alt="" /></span>
-					<div class="content">
-						<header class="major">
-							<h2>Stuff I do</h2>
-						</header>
-						<p>Consequat sed ultricies rutrum. Sed adipiscing eu amet interdum lorem blandit vis ac commodo aliquet vulputate.</p>
-						<ul class="icons-grid">
-							<li>
-								<span class="icon solid major fa-camera-retro"></span>
-								<h3>Magna Etiam</h3>
-							</li>
-							<li>
-								<span class="icon solid major fa-pencil-alt"></span>
-								<h3>Lorem Ipsum</h3>
-							</li>
-							<li>
-								<span class="icon solid major fa-code"></span>
-								<h3>Nulla Tempus</h3>
-							</li>
-							<li>
-								<span class="icon solid major fa-coffee"></span>
-								<h3>Sed Feugiat</h3>
-							</li>
-						</ul>
-					</div>
-					<a href="#three" class="goto-next scrolly">Next</a>
+				<div class="feature-item">
+					<h4>20+ Languages</h4>
+					<p>Play in your native language or challenge yourself with a new one. Millions of possible words await.</p>
 				</div>
-			</section>
-
-		<!-- Three -->
-			<section id="three" class="main special">
-				<div class="container">
-					<span class="image fit primary"><img src="images/pic03.jpg" alt="" /></span>
-					<div class="content">
-						<header class="major">
-							<h2>One more thing</h2>
-						</header>
-						<p>Aliquam ante ac id. Adipiscing interdum lorem praesent fusce pellentesque arcu feugiat. Consequat sed ultricies rutrum. Sed adipiscing eu amet interdum lorem blandit vis ac commodo aliquet integer vulputate phasellus lorem ipsum dolor lorem magna consequat sed etiam adipiscing interdum.</p>
-					</div>
-					<a href="#footer" class="goto-next scrolly">Next</a>
+				<div class="feature-item">
+					<h4>Expanding Story</h4>
+					<p>Progress through the Campaign and unlock story cards. More than 100 unique badges and rewards.</p>
 				</div>
-			</section>
+			</div>
 
-		<!-- Four -->
-		<!--
-			<section id="four" class="main">
-				<div class="container">
-					<div class="content">
-						<header class="major">
-							<h2>Elements</h2>
-						</header>
-						<section>
-							<h4>Text</h4>
-							<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-							This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-							This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-							<hr />
-							<header>
-								<h4>Heading with a Subtitle</h4>
-								<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-							</header>
-							<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-							<header>
-								<h5>Heading with a Subtitle</h5>
-								<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-							</header>
-							<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-							<hr />
-							<h2>Heading Level 2</h2>
-							<h3>Heading Level 3</h3>
-							<h4>Heading Level 4</h4>
-							<h5>Heading Level 5</h5>
-							<h6>Heading Level 6</h6>
-							<hr />
-							<h5>Blockquote</h5>
-							<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-							<h5>Preformatted</h5>
-							<pre><code>i = 0;
-
-while (!deck.isInOrder()) {
-  print 'Iteration ' + i;
-  deck.shuffle();
-  i++;
-}
-
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-						</section>
-
-						<section>
-							<h4>Lists</h4>
-							<div class="row">
-								<div class="col-6 col-12-medium">
-									<h5>Unordered</h5>
-									<ul>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-									<h5>Alternate</h5>
-									<ul class="alt">
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-medium">
-									<h5>Ordered</h5>
-									<ol>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis viverra.</li>
-										<li>Felis enim feugiat.</li>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis lorem.</li>
-										<li>Felis enim et feugiat.</li>
-									</ol>
-									<h5>Icons</h5>
-									<ul class="icons">
-										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-										<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-										<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<h5>Actions</h5>
-							<ul class="actions">
-								<li><a href="#" class="button primary">Default</a></li>
-								<li><a href="#" class="button">Default</a></li>
-							</ul>
-							<ul class="actions small">
-								<li><a href="#" class="button primary small">Small</a></li>
-								<li><a href="#" class="button small">Small</a></li>
-							</ul>
-							<div class="row">
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary small">Small</a></li>
-										<li><a href="#" class="button small">Small</a></li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary fit">Default</a></li>
-										<li><a href="#" class="button fit">Default</a></li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary small fit">Small</a></li>
-										<li><a href="#" class="button small fit">Small</a></li>
-									</ul>
-								</div>
-							</div>
-						</section>
-
-						<section>
-							<h4>Table</h4>
-							<h5>Default</h5>
-							<div class="table-wrapper">
-								<table>
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Description</th>
-											<th>Price</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Item One</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Two</td>
-											<td>Vis ac commodo adipiscing arcu aliquet.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Three</td>
-											<td> Morbi faucibus arcu accumsan lorem.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Four</td>
-											<td>Vitae integer tempus condimentum.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Five</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"></td>
-											<td>100.00</td>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-
-							<h5>Alternate</h5>
-							<div class="table-wrapper">
-								<table class="alt">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Description</th>
-											<th>Price</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Item One</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Two</td>
-											<td>Vis ac commodo adipiscing arcu aliquet.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Three</td>
-											<td> Morbi faucibus arcu accumsan lorem.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Four</td>
-											<td>Vitae integer tempus condimentum.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Five</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"></td>
-											<td>100.00</td>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-						</section>
-
-						<section>
-							<h4>Buttons</h4>
-							<ul class="actions">
-								<li><a href="#" class="button primary">Primary</a></li>
-								<li><a href="#" class="button">Default</a></li>
-							</ul>
-							<ul class="actions">
-								<li><a href="#" class="button">Default</a></li>
-								<li><a href="#" class="button small">Small</a></li>
-							</ul>
-							<ul class="actions fit">
-								<li><a href="#" class="button primary fit">Fit</a></li>
-								<li><a href="#" class="button fit">Fit</a></li>
-							</ul>
-							<ul class="actions fit small">
-								<li><a href="#" class="button primary fit small">Fit + Small</a></li>
-								<li><a href="#" class="button fit small">Fit + Small</a></li>
-							</ul>
-							<ul class="actions">
-								<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-								<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-							</ul>
-							<ul class="actions">
-								<li><span class="button primary disabled">Disabled</span></li>
-								<li><span class="button disabled">Disabled</span></li>
-							</ul>
-						</section>
-
-						<section>
-							<h4>Form</h4>
-							<form method="post" action="#">
-								<div class="row gtr-uniform">
-									<div class="col-6 col-12-xsmall">
-										<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
-									</div>
-									<div class="col-6 col-12-xsmall">
-										<input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
-									</div>
-									<div class="col-12">
-										<select name="demo-category" id="demo-category">
-											<option value="">- Category -</option>
-											<option value="1">Manufacturing</option>
-											<option value="1">Shipping</option>
-											<option value="1">Administration</option>
-											<option value="1">Human Resources</option>
-										</select>
-									</div>
-									<div class="col-4 col-12-small">
-										<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-										<label for="demo-priority-low">Low</label>
-									</div>
-									<div class="col-4 col-12-small">
-										<input type="radio" id="demo-priority-normal" name="demo-priority">
-										<label for="demo-priority-normal">Normal</label>
-									</div>
-									<div class="col-4 col-12-small">
-										<input type="radio" id="demo-priority-high" name="demo-priority">
-										<label for="demo-priority-high">High</label>
-									</div>
-									<div class="col-6 col-12-small">
-										<input type="checkbox" id="demo-copy" name="demo-copy">
-										<label for="demo-copy">Email me a copy</label>
-									</div>
-									<div class="col-6 col-12-small">
-										<input type="checkbox" id="demo-human" name="demo-human" checked>
-										<label for="demo-human">Not a robot</label>
-									</div>
-									<div class="col-12">
-										<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-									</div>
-									<div class="col-12">
-										<ul class="actions">
-											<li><input type="submit" value="Send Message" class="primary" /></li>
-											<li><input type="reset" value="Reset" /></li>
-										</ul>
-									</div>
-								</div>
-							</form>
-						</section>
-
-						<section>
-							<h4>Image</h4>
-							<h5>Fit</h5>
-							<div class="box alt">
-								<div class="row gtr-uniform gtr-50">
-									<div class="col-12"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-								</div>
-							</div>
-							<h5>Left &amp; Right</h5>
-							<p><span class="image left"><img src="images/pic05.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-							<p><span class="image right"><img src="images/pic05.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-						</section>
-
-					</div>
-					<a href="#footer" class="goto-next scrolly">Next</a>
+			<p class="gallery-label">Screenshots</p>
+			<div class="gallery-grid" id="gallery">
+				<div class="gallery-thumb" onclick="openLightbox(0)">
+					<img src="images/scrshot1.png" alt="Screenshot 1" loading="lazy" />
 				</div>
-			</section>
-		-->
-
-		<!-- Footer -->
-			<section id="footer">
-				<div class="container">
-					<header class="major">
-						<h2>Get in touch</h2>
-					</header>
-					<form method="post" action="#">
-						<div class="row gtr-uniform">
-							<div class="col-6 col-12-xsmall"><input type="text" name="name" id="name" placeholder="Name" /></div>
-							<div class="col-6 col-12-xsmall"><input type="email" name="email" id="email" placeholder="Email" /></div>
-							<div class="col-12"><textarea name="message" id="message" placeholder="Message" rows="4"></textarea></div>
-							<div class="col-12">
-								<ul class="actions special">
-									<li><input type="submit" value="Send Message" class="primary" /></li>
-								</ul>
-							</div>
-						</div>
-					</form>
+				<div class="gallery-thumb" onclick="openLightbox(1)">
+					<img src="images/scrshot2.jpg" alt="Screenshot 2" loading="lazy" />
 				</div>
-				<footer>
-					<ul class="icons">
-						<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="#" class="icon brands alt fa-dribbble"><span class="label">Dribbble</span></a></li>
-						<li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
-					</ul>
-					<ul class="copyright">
-						<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Demo Images: <a href="http://unsplash.com">Unsplash</a></li>
-					</ul>
-				</footer>
-			</section>
+				<div class="gallery-thumb" onclick="openLightbox(2)">
+					<img src="images/scrshot3.jpg" alt="Screenshot 3" loading="lazy" />
+				</div>
+				<div class="gallery-thumb" onclick="openLightbox(3)">
+					<img src="images/scrshot4.jpg" alt="Screenshot 4" loading="lazy" />
+				</div>
+			</div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			<div class="modal-play-btn">
+				<div class="play-btn">
+					<img src="images/googleplay.png" alt="Get it on Google Play" style="height:46px" />
+				</div>
+			</div>
 
-	</body>
+		</div>
+	</div>
+</div>
+
+<!-- ─── MODAL: ABOUT ─────────────────────────────────────── -->
+<div id="modal-about" class="modal-overlay" onclick="handleOverlayClick(event, 'modal-about')">
+	<div class="modal">
+		<div class="modal-header">
+			<h2>Project NYR</h2>
+			<button class="modal-close" onclick="closeModal('modal-about')">✕</button>
+		</div>
+		<div class="modal-body">
+			<span class="studio-tag">Independent Game Studio</span>
+			<div class="about-text">
+				<p>Project NYR is an independent studio building games and interactive experiences for thinking beings. We believe the best games are the ones that reward curiosity — games that are easy to start, but reveal new depth the longer you play.</p>
+				<p>Word Arc is our first title: a game born from the conviction that word games and puzzle games belong together. Every mechanic, every language pack, every story card is designed to create moments of genuine discovery.</p>
+				<p>We are building slowly and carefully — because the games worth playing are the ones worth making properly.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ─── MODAL: CONTACT ───────────────────────────────────── -->
+<div id="modal-contact" class="modal-overlay" onclick="handleOverlayClick(event, 'modal-contact')">
+	<div class="modal">
+		<div class="modal-header">
+			<h2>Contact</h2>
+			<button class="modal-close" onclick="closeModal('modal-contact')">✕</button>
+		</div>
+		<div class="modal-body">
+			<div class="contact-links">
+				<a href="mailto:hello@projectnyr.com" class="contact-link">
+					<span class="icon">✉</span>
+					<span class="label">Email</span>
+					<span class="value">hello@projectnyr.com</span>
+				</a>
+				<!-- Uncomment and fill in as your social accounts go live:
+				<a href="https://twitter.com/projectnyr" target="_blank" class="contact-link">
+					<span class="icon">𝕏</span>
+					<span class="label">Twitter / X</span>
+					<span class="value">@projectnyr</span>
+				</a>
+				<a href="https://instagram.com/projectnyr" target="_blank" class="contact-link">
+					<span class="icon">◎</span>
+					<span class="label">Instagram</span>
+					<span class="value">@projectnyr</span>
+				</a>
+				-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ─── MODAL: PRIVACY POLICY ────────────────────────────── -->
+<div id="modal-privacy" class="modal-overlay" onclick="handleOverlayClick(event, 'modal-privacy')">
+	<div class="modal">
+		<div class="modal-header">
+			<h2>Privacy Policy</h2>
+			<button class="modal-close" onclick="closeModal('modal-privacy')">✕</button>
+		</div>
+		<div class="modal-body">
+			<p class="privacy-date">Last updated: April 2026</p>
+
+			<div class="privacy-section">
+				<h3>Overview</h3>
+				<p>Project NYR ("we", "us") operates the Word Arc mobile application. This policy explains how we handle your information when you use our app.</p>
+			</div>
+
+			<div class="privacy-section">
+				<h3>Information We Collect</h3>
+				<p>Word Arc does not directly collect personal information. However, the following third-party services integrated into the app may collect data to provide their services:</p>
+				<ul>
+					<li><strong>Google AdMob</strong> — serves advertisements and may collect device identifiers and usage data.</li>
+					<li><strong>Unity LevelPlay (IronSource)</strong> — ad mediation platform that collects advertising-related data.</li>
+					<li><strong>Firebase Analytics</strong> — collects anonymised usage events and crash reports to help us improve the app.</li>
+					<li><strong>Firebase Crashlytics</strong> — collects crash data and device information for stability improvements.</li>
+				</ul>
+			</div>
+
+			<div class="privacy-section">
+				<h3>Advertising & Consent</h3>
+				<p>Word Arc is ad-supported. On first launch, you will be asked for consent to personalised advertising in accordance with GDPR (EEA users) and applicable regional privacy laws. You may opt out of personalised ads at any time through your device settings.</p>
+			</div>
+
+			<div class="privacy-section">
+				<h3>Children</h3>
+				<p>Word Arc is not directed at children under the age of 13. We do not knowingly collect personal information from children.</p>
+			</div>
+
+			<div class="privacy-section">
+				<h3>Data Retention & Deletion</h3>
+				<p>We do not store personal data on our own servers. For data collected by third-party services, please refer to their respective privacy policies: <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--accent)">Google / AdMob</a>, <a href="https://www.is.com/privacy-policy/" target="_blank" style="color:var(--accent)">IronSource</a>, <a href="https://firebase.google.com/support/privacy" target="_blank" style="color:var(--accent)">Firebase</a>.</p>
+			</div>
+
+			<div class="privacy-section">
+				<h3>Contact</h3>
+				<p>For privacy-related questions, contact us at <a href="mailto:hello@projectnyr.com" style="color:var(--accent)">hello@projectnyr.com</a>.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ─── LIGHTBOX ──────────────────────────────────────────── -->
+<div id="lightbox" onclick="closeLightboxOnBg(event)">
+	<button class="lb-close" onclick="closeLightbox()">✕</button>
+	<button class="lb-nav" id="lb-prev" onclick="lbNav(-1)">‹</button>
+	<img id="lb-img" src="" alt="" />
+	<button class="lb-nav" id="lb-next" onclick="lbNav(1)">›</button>
+	<div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<script>
+	// ─── MODAL ─────────────────────────────────────────────────
+	function openModal(id) {
+		document.getElementById(id).classList.add('active');
+		document.body.classList.add('modal-open');
+		document.body.style.overflow = 'hidden';
+	}
+	function closeModal(id) {
+		document.getElementById(id).classList.remove('active');
+		// Başka açık modal kalmadıysa blur'u kaldır
+		if (!document.querySelector('.modal-overlay.active')) {
+			document.body.classList.remove('modal-open');
+		}
+		document.body.style.overflow = '';
+	}
+	function handleOverlayClick(e, id) {
+		if (e.target === document.getElementById(id)) closeModal(id);
+	}
+	document.addEventListener('keydown', e => {
+		if (e.key === 'Escape') {
+			document.querySelectorAll('.modal-overlay.active').forEach(m => {
+				m.classList.remove('active');
+			});
+			document.body.classList.remove('modal-open');
+			closeLightbox();
+			document.body.style.overflow = '';
+		}
+	});
+
+	// ─── LIGHTBOX ──────────────────────────────────────────────
+	const screenshots = [
+		'images/scrshot1.png',
+		'images/scrshot2.jpg',
+		'images/scrshot3.jpg',
+		'images/scrshot4.jpg',
+		'images/scrshot5.jpg'
+	];
+	let lbIndex = 0;
+
+	function openLightbox(i) {
+		lbIndex = i;
+		updateLightbox();
+		document.getElementById('lightbox').classList.add('active');
+		document.body.style.overflow = 'hidden';
+	}
+	function closeLightbox() {
+		document.getElementById('lightbox').classList.remove('active');
+		document.body.style.overflow = '';
+	}
+	function closeLightboxOnBg(e) {
+		if (e.target === document.getElementById('lightbox')) closeLightbox();
+	}
+	function lbNav(dir) {
+		lbIndex = (lbIndex + dir + screenshots.length) % screenshots.length;
+		updateLightbox();
+	}
+	function updateLightbox() {
+		const img = document.getElementById('lb-img');
+		img.style.opacity = '0';
+		setTimeout(() => {
+			img.src = screenshots[lbIndex];
+			img.style.opacity = '1';
+			img.style.transition = 'opacity 0.2s ease';
+		}, 80);
+		document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + screenshots.length;
+	}
+
+	// Keyboard nav for lightbox
+	document.addEventListener('keydown', e => {
+		if (!document.getElementById('lightbox').classList.contains('active')) return;
+		if (e.key === 'ArrowLeft')  lbNav(-1);
+		if (e.key === 'ArrowRight') lbNav(1);
+	});
+</script>
+
+</body>
 </html>
