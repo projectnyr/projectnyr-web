@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Privacy Policy — Word Arc | Project NYR</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="robots" content="noindex, follow" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Crimson+Pro:wght@300;400&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+	<style>
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+		:root {
+			--bg:      #0a0c10;
+			--bg2:     #0f1218;
+			--border:  rgba(255,255,255,0.08);
+			--accent:  #7eb8f7;
+			--accent2: #f7c97e;
+			--text:    #c8d4e8;
+			--dim:     #5a6a80;
+			--white:   #eef2f8;
+		}
+
+		html { scroll-behavior: smooth; }
+
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font-family: 'Crimson Pro', Georgia, serif;
+			font-size: 18px;
+			line-height: 1.75;
+			min-height: 100vh;
+		}
+
+		/* Background */
+		#bg {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+			background-image: url('images/pic01.png');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		#bg::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(160deg, rgba(6,8,14,0.82) 0%, rgba(6,8,14,0.92) 100%);
+		}
+
+		/* Layout */
+		#wrapper {
+			position: relative;
+			z-index: 1;
+			max-width: 720px;
+			margin: 0 auto;
+			padding: 4rem 2rem 6rem;
+		}
+
+		/* Back link */
+		.back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-family: 'Space Mono', monospace;
+			font-size: 0.62rem;
+			letter-spacing: 0.25em;
+			text-transform: uppercase;
+			color: var(--dim);
+			text-decoration: none;
+			margin-bottom: 3rem;
+			transition: color 0.2s;
+		}
+		.back-link:hover { color: var(--accent); }
+		.back-link::before { content: '←'; font-size: 0.9rem; }
+
+		/* Header */
+		.page-header {
+			margin-bottom: 3rem;
+			padding-bottom: 2rem;
+			border-bottom: 1px solid var(--border);
+			animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) both;
+		}
+		.studio-tag {
+			display: inline-block;
+			font-family: 'Space Mono', monospace;
+			font-size: 0.6rem;
+			letter-spacing: 0.3em;
+			text-transform: uppercase;
+			color: var(--accent2);
+			border: 1px solid rgba(247,201,126,0.25);
+			padding: 0.28rem 0.7rem;
+			border-radius: 2px;
+			margin-bottom: 1.2rem;
+		}
+		.page-header h1 {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 700;
+			font-size: clamp(1.8rem, 5vw, 2.8rem);
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--white);
+			line-height: 1.1;
+			margin-bottom: 0.6rem;
+		}
+		.page-header h1 span { color: var(--accent); }
+		.updated {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.62rem;
+			letter-spacing: 0.2em;
+			color: var(--dim);
+		}
+
+		/* Content */
+		.content {
+			animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.1s both;
+		}
+
+		.section {
+			margin-bottom: 2.5rem;
+		}
+		.section h2 {
+			font-family: 'Rajdhani', sans-serif;
+			font-weight: 600;
+			font-size: 0.72rem;
+			letter-spacing: 0.25em;
+			text-transform: uppercase;
+			color: var(--accent);
+			margin-bottom: 0.8rem;
+			padding-bottom: 0.4rem;
+			border-bottom: 1px solid rgba(126,184,247,0.12);
+		}
+		.section p {
+			color: var(--text);
+			font-size: 1rem;
+			font-weight: 300;
+			margin-bottom: 0.8rem;
+		}
+		.section p:last-child { margin-bottom: 0; }
+
+		.section ul {
+			padding-left: 1.2rem;
+			margin-top: 0.5rem;
+		}
+		.section ul li {
+			color: var(--text);
+			font-size: 1rem;
+			font-weight: 300;
+			margin-bottom: 0.5rem;
+			line-height: 1.6;
+		}
+		.section ul li strong {
+			color: var(--white);
+			font-weight: 400;
+		}
+
+		a {
+			color: var(--accent);
+			text-decoration: none;
+			transition: color 0.2s;
+		}
+		a:hover { color: #a8d0ff; }
+
+		/* Divider */
+		hr {
+			border: none;
+			border-top: 1px solid var(--border);
+			margin: 2.5rem 0;
+		}
+
+		/* Footer */
+		.page-footer {
+			margin-top: 4rem;
+			padding-top: 2rem;
+			border-top: 1px solid var(--border);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+		.page-footer p {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.6rem;
+			letter-spacing: 0.18em;
+			color: var(--dim);
+		}
+		.page-footer a {
+			color: var(--dim);
+		}
+		.page-footer a:hover { color: var(--accent); }
+
+		@keyframes fadeUp {
+			from { opacity: 0; transform: translateY(20px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+
+		@media (max-width: 600px) {
+			#wrapper { padding: 2.5rem 1.5rem 4rem; }
+			.page-footer { flex-direction: column; align-items: flex-start; }
+		}
+	</style>
+</head>
+<body>
+
+<div id="bg"></div>
+
+<div id="wrapper">
+
+	<a href="/" class="back-link">projectnyr.com</a>
+
+	<header class="page-header">
+		<span class="studio-tag">Project NYR · Word Arc</span>
+		<h1>Privacy <span>Policy</span></h1>
+		<p class="updated">Last updated: April 2026</p>
+	</header>
+
+	<div class="content">
+
+		<div class="section">
+			<h2>Overview</h2>
+			<p>Project NYR ("we", "us", "our") operates the Word Arc mobile application (the "App"). This Privacy Policy explains how information is collected, used, and shared when you use our App.</p>
+			<p>We are committed to protecting your privacy. Word Arc does not directly collect or store personal information on our own servers.</p>
+		</div>
+
+		<div class="section">
+			<h2>Information Collected by Third-Party Services</h2>
+			<p>The following third-party services are integrated into Word Arc and may collect data to provide their services. Each service operates under its own privacy policy:</p>
+			<ul>
+				<li><strong>Google AdMob</strong> — serves advertisements within the App. May collect device identifiers, IP address, and usage data for ad targeting and measurement. <a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy →</a></li>
+				<li><strong>Unity LevelPlay (IronSource)</strong> — ad mediation platform that manages ad delivery. Collects advertising-related identifiers and interaction data. <a href="https://www.is.com/privacy-policy/" target="_blank">IronSource Privacy Policy →</a></li>
+				<li><strong>Firebase Analytics</strong> — collects anonymised in-app usage events to help us understand how players interact with the App and improve the experience. <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy Policy →</a></li>
+				<li><strong>Firebase Crashlytics</strong> — collects crash reports and device information to help us identify and fix stability issues. <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy Policy →</a></li>
+			</ul>
+		</div>
+
+		<div class="section">
+			<h2>Advertising &amp; Consent (GDPR / CCPA)</h2>
+			<p>Word Arc is ad-supported. On first launch, users in the European Economic Area (EEA) and other applicable regions will be presented with a consent request in accordance with the General Data Protection Regulation (GDPR) and applicable regional privacy laws.</p>
+			<p>You may choose to receive personalised or non-personalised advertisements. You can update your consent preferences or opt out of personalised ads at any time through your device settings:</p>
+			<ul>
+				<li><strong>Android:</strong> Settings → Google → Ads → Delete advertising ID or opt out of ads personalisation</li>
+			</ul>
+		</div>
+
+		<div class="section">
+			<h2>Children's Privacy (COPPA)</h2>
+			<p>Word Arc is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided personal information through our App, please contact us and we will take steps to remove such information.</p>
+		</div>
+
+		<div class="section">
+			<h2>Data Retention &amp; Deletion</h2>
+			<p>We do not store personal data on our own servers. All data collection is performed by the third-party services listed above. For data retention periods and deletion requests, please refer to the respective privacy policies of each service.</p>
+			<p>To request deletion of data associated with your device, you may reset your advertising ID through your device settings or contact the relevant third-party service directly.</p>
+		</div>
+
+		<div class="section" id="deletion">
+			<h2>Data Deletion Request</h2>
+			<p>To request deletion of any data associated with your use of Word Arc, please contact us by email. We will process your request and, where applicable, coordinate with our third-party service providers to action the deletion.</p>
+			<p>
+				<a href="mailto:hello@projectnyr.com?subject=Data%20Deletion%20Request">
+					hello@projectnyr.com — Subject: Data Deletion Request
+				</a>
+			</p>
+			<p>Please include the following in your email:</p>
+			<ul>
+				<li>The device type and operating system you used</li>
+				<li>Your advertising ID (Android: Settings → Google → Ads → Your advertising ID)</li>
+				<li>A description of the data you would like deleted</li>
+			</ul>
+			<p>We will respond within 30 days. Note that data held by third-party services (AdMob, Firebase, IronSource) must be requested directly from those providers using the links in the section above.</p>
+		</div>
+
+		<div class="section">
+			<h2>Changes to This Policy</h2>
+			<p>We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated revision date. We encourage you to review this policy periodically.</p>
+		</div>
+
+		<div class="section">
+			<h2>Contact</h2>
+			<p>If you have any questions or concerns about this Privacy Policy, please contact us:</p>
+			<p><a href="mailto:hello@projectnyr.com">hello@projectnyr.com</a></p>
+		</div>
+
+	</div>
+
+	<footer class="page-footer">
+		<p>© 2026 Project NYR</p>
+		<p><a href="/">← Back to projectnyr.com</a></p>
+	</footer>
+
+</div>
+
+</body>
+</html>
